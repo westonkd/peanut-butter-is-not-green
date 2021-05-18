@@ -33,6 +33,10 @@ class PeanutModel
     @data_object.to_h
   end
 
+  def as_json
+    to_h
+  end
+
   def self.find(id)
     new({id: id}.merge(store.find(id)))
   end
