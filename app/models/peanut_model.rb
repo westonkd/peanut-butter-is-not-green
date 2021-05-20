@@ -43,7 +43,7 @@ class PeanutModel
 
   def self.create!(record)
     id = store.insert!(record)
-    new(record.merge({id: id}))
+    new(record.merge(id: id))
   end
 
   def self.store
@@ -51,11 +51,12 @@ class PeanutModel
   end
 
   def self.fetch_attributes
-    @@attributes
+    @@attributes[self.to_s]
   end
 
   def self.attributes(attrs)
-    @@attributes = [:id] + attrs
+    @@attributes ||= {}
+    @@attributes[self.to_s] = [:id] + attrs
   end
 
   private

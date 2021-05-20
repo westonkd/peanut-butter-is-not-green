@@ -5,7 +5,7 @@ require 'ostruct'
 class PeanutController
   attr_reader :params, :current_user
 
-  def initialize(user, params)
+  def initialize(user:, params:)
     @current_user = user
     @params = params
   end
