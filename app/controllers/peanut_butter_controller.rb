@@ -17,6 +17,7 @@ class PeanutButterController < PeanutController
 
   def update
     return render_user_required unless @current_user
+    return admin_required unless @current_user.is_admin
 
     peanut_butter.update!(params[:peanut_butter])
     render json: peanut_butter.as_json, status: 200
@@ -40,5 +41,9 @@ class PeanutButterController < PeanutController
 
   def render_user_required
     render json: { message: 'Requires an active user session' }, status: 401
+  end
+
+  def admin_required
+    render json: { message: 'Requires admin access' }, status: 401
   end
 end
