@@ -21,16 +21,20 @@ describe PeanutButterController do
 
   describe '#show' do
     context 'when the peanut butter exists' do
-      it 'shows the peanut butter with status 200' do
+      it 'responds with status 200' do
         response = PeanutButterController.new(
           user: user, params: { id: pb.id }
         ).show
 
         expect(response).to be_ok
-        expect(response.body[:brand]).to eq 'Jif'
-        expect(response.body[:price_per_ounce]).to eq 13.8
-        expect(response.body[:average_rating]).to eq 3.5
-        expect(response.body[:color]).to eq 'not green'
+      end
+
+      it 'responds with the requested peanut butter' do
+        response = PeanutButterController.new(
+          user: user, params: { id: pb.id }
+        ).show
+
+        expect(response.body).to include pb.to_h
       end
     end
 
@@ -41,6 +45,13 @@ describe PeanutButterController do
         ).show
 
         expect(response).to be_unauthorized
+      end
+
+      it 'includes an "unauthorized" message' do
+        response = PeanutButterController.new(
+          user: nil, params: { id: pb.id }
+        ).show
+
         expect(response.body[:message]).to eq 'Requires an active user session'
       end
     end
