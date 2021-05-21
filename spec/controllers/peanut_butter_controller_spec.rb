@@ -3,7 +3,7 @@
 require_relative '../spec_helper'
 
 describe PeanutButterController do
-  describe 'showing a single peanut butter' do
+  describe '#show' do
     it 'shows the peanut butter with status 200 when it exists' do
       user = User.create!(
         given_names: 'Weston K.',
@@ -56,7 +56,7 @@ describe PeanutButterController do
     end
   end
 
-  describe 'updating a peanut butter record' do
+  describe '#update' do
     it 'updates the peanut butter' do
       pb = PeanutButter.create!(
         brand: 'Jif',
