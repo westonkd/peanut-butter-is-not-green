@@ -3,21 +3,25 @@
 require_relative '../spec_helper'
 
 describe PeanutButterController do
+  let(:pb) do
+    PeanutButter.create!(
+      brand: 'Jif',
+      price_per_ounce: 13.8,
+      average_rating: 3.5,
+      color: 'not green'
+    )
+  end
+
+  let(:user) do
+    User.create!(
+      given_names: 'Weston K.',
+      surnames: 'Dransfield'
+    )
+  end
+
   describe '#show' do
     context 'when the peanut butter exists' do
       it 'shows the peanut butter with status 200' do
-        user = User.create!(
-          given_names: 'Weston K.',
-          surnames: 'Dransfield'
-        )
-
-        pb = PeanutButter.create!(
-          brand: 'Jif',
-          price_per_ounce: 13.8,
-          average_rating: 3.5,
-          color: 'not green'
-        )
-
         response = PeanutButterController.new(
           user: user, params: { id: pb.id }
         ).show
@@ -32,13 +36,6 @@ describe PeanutButterController do
 
     context 'when no user session exists' do
       it 'renders 401' do
-        pb = PeanutButter.create!(
-          brand: 'Jif',
-          price_per_ounce: 13.8,
-          average_rating: 3.5,
-          color: 'not green'
-        )
-
         response = PeanutButterController.new(
           user: nil, params: { id: pb.id }
         ).show
@@ -50,11 +47,6 @@ describe PeanutButterController do
 
     context 'when the peanut butter does not exist' do
       it 'renders 404' do
-        user = User.create!(
-          given_names: 'Weston K.',
-          surnames: 'Dransfield'
-        )
-
         response = PeanutButterController.new(user: user, params: { id: 999 }).show
         expect(response).to be_not_found
         expect(response.body[:message]).to eq 'A record with the given ID does not exist'
@@ -64,20 +56,15 @@ describe PeanutButterController do
 
   describe '#update' do
     context 'when the peanut butter exists' do
-      it 'updates the peanut butter' do
-        pb = PeanutButter.create!(
-          brand: 'Jif',
-          price_per_ounce: 13.8,
-          average_rating: 3.5,
-          color: 'not green'
-        )
-
-        user = User.create!(
+      let(:user) do
+        User.create!(
           given_names: 'Weston K.',
           surnames: 'Dransfield',
           is_admin: true
         )
+      end
 
+      it 'updates the peanut butter' do
         PeanutButterController.new(
           user: user,
           params: {
@@ -92,19 +79,6 @@ describe PeanutButterController do
       end
 
       it 'responds with the updated peanut butter' do
-        pb = PeanutButter.create!(
-          brand: 'Jif',
-          price_per_ounce: 13.8,
-          average_rating: 3.5,
-          color: 'not green'
-        )
-
-        user = User.create!(
-          given_names: 'Weston K.',
-          surnames: 'Dransfield',
-          is_admin: true
-        )
-
         response = PeanutButterController.new(
           user: user,
           params: {
@@ -122,18 +96,6 @@ describe PeanutButterController do
 
     context 'when the current user is not an admin' do
       it 'does not allow updating PB' do
-        pb = PeanutButter.create!(
-          brand: 'Jif',
-          price_per_ounce: 13.8,
-          average_rating: 3.5,
-          color: 'not green'
-        )
-
-        user = User.create!(
-          given_names: 'Weston K.',
-          surnames: 'Dransfield',
-        )
-
         response = PeanutButterController.new(
           user: user,
           params: {
@@ -150,13 +112,6 @@ describe PeanutButterController do
 
     context 'when no user session exists' do
       it 'responds with 401' do
-        pb = PeanutButter.create!(
-          brand: 'Jif',
-          price_per_ounce: 13.8,
-          average_rating: 3.5,
-          color: 'not green'
-        )
-
         response = PeanutButterController.new(
           user: nil,
           params: {
